@@ -180,7 +180,7 @@ extension HomeViewController: UICollectionViewDelegate {
         if indexPath.section == Section.product.rawValue {
             let product = viewModel.products[indexPath.item]
             // 通过路由跳转商品详情，避免直接依赖 ShopProduct 组件
-            routePush(RouterPath.Product.detail, params: [RouterParamKey.product: product])
+            //routePush(RouterPath.Product.detail, params: [RouterParamKey.product: product])
         }
     }
 }
