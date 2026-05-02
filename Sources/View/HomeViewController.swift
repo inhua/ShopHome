@@ -109,7 +109,27 @@ public class HomeViewController: BaseViewController {
     }
 
     private func scrollToNextBanner() {
-        currentBannerIndex = (currentBannerIndex + 1) % viewModel.banners.count
+        // 滑动到下一张（在扩展数据源中）
+        currentBannerIndex += 1
+        
+        // 如果滑动到“假第一张”（即扩展数据源的末尾），立即跳回真实的第一张
+        if currentBannerIndex == viewModel.extendedBanners.count - 1 {
+            collectionView.scrollToItem(at: IndexPath(item: 1, section: 0),
+                                        at: .centeredHorizontally, animated: false)
+            currentBannerIndex = 1
+            return
+        }
+        
+        // 如果滑动到“假最后一张”（即扩展数据源的开头），立即跳回真实最后一张
+        if currentBannerIndex == 0 {
+            let lastIndex = viewModel.extendedBanners.count - 2
+            collectionView.scrollToItem(at: IndexPath(item: lastIndex, section: 0),
+                                        at: .centeredHorizontally, animated: false)
+            currentBannerIndex = lastIndex
+            return
+        }
+        
+        // 正常滑动
         collectionView.scrollToItem(at: IndexPath(item: currentBannerIndex, section: 0),
                                     at: .centeredHorizontally, animated: true)
     }
@@ -127,7 +147,7 @@ extension HomeViewController: UICollectionViewDataSource {
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch Section(rawValue: section) {
-        case .banner:   return viewModel.banners.count
+        case .banner:   return viewModel.extendedBanners.count
         case .category: return viewModel.categories.count
         case .product:  return viewModel.products.count
         case .none:     return 0
@@ -138,7 +158,7 @@ extension HomeViewController: UICollectionViewDataSource {
         switch Section(rawValue: indexPath.section) {
         case .banner:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeBannerCell.reuseID, for: indexPath) as! HomeBannerCell
-            cell.configure(with: viewModel.banners[indexPath.item], index: indexPath.item)
+            cell.configure(with: viewModel.extendedBanners[indexPath.item], index: indexPath.item)
             return cell
         case .category:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCategoryCell.reuseID, for: indexPath) as! HomeCategoryCell

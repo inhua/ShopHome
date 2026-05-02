@@ -5,6 +5,7 @@ import ShopBase
 public class HomeViewModel {
 
     public var banners: [BannerModel] = []
+    public var extendedBanners: [BannerModel] = []
     public var categories: [CategoryModel] = []
     public var products: [ProductModel] = []
 
@@ -30,6 +31,7 @@ public class HomeViewModel {
             CategoryModel(id: "7", name: "图书文具", icon: "book"),
             CategoryModel(id: "8", name: "更多分类", icon: "ellipsis")
         ]
+        extendedBanners = [banners.last!] + banners + [banners.first!]
         products = mockProducts()
         onDataUpdated?()
     }
